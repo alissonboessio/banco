@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Param, Put, Delete } from '@nestjs/common'
 import { ContasService } from './contas.service';
 import { CreateContaDto } from './dto/create-conta.dto';
 import { UpdateContaDto } from './dto/update-conta.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('contas')
 @Controller('contas')
 export class ContasController {
   constructor(private readonly contasService: ContasService) {}
@@ -17,18 +19,18 @@ export class ContasController {
     return this.contasService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.contasService.findOne(id);
+  @Get(':numero')
+  findOne(@Param('numero') numero: number) {
+    return this.contasService.findOne(numero);
   }
 
-  @Put(':id')
-  update(@Param('id') id: number, @Body() conta: UpdateContaDto) {
-    return this.contasService.update(id, conta);
+  @Put(':numero')
+  update(@Param('numero') numero: number, @Body() conta: UpdateContaDto) {
+    return this.contasService.update(numero, conta);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.contasService.remove(id);
+  @Delete(':numero')
+  remove(@Param('numero') numero: number) {
+    return this.contasService.remove(numero);
   }
 }
