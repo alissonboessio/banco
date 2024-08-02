@@ -1,26 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Contas } from './schemas/contas.schema';
+import { Model } from 'mongoose';
+import { CreateContaDto } from './dto/create-conta.dto';
+import { UpdateContaDto } from './dto/update-conta.dto';
 
 @Injectable()
 export class ContasService {
-    constructor() {}
+    constructor(@InjectModel(Contas.name) private contaModel: Model<Contas>) {}
 
-    create(conta: any)  {
-        return "conta criada com sucesso " + JSON.stringify(conta);
-    }
+    create(conta: CreateContaDto)  {
+        const createdConta = new this.contaModel(conta);
+        return createdConta.save();
+        }
 
     findAll() {
-        return "contas encontradas!";
+        return this.contaModel.find().exec();
     }
   
-    findOne(id: number) {
-        return "conta encontrada!";
+    findOne(numero: number) {
+        return this.contaModel.findOne({numero: numero}).exec();
     }
   
-    async update(id: number, conta: any) {        
-        return "conta atualizada!";
+    async update(numero: number, conta: UpdateContaDto) {        
+        const contaUpd = await this.contaModel.findOneAndUpdate({numero: numero}, conta).exec();
+        return contaUpd
     }
   
-    async remove(id: number) {        
-        return "conta removida!";
+    async remove(numero: number) {        
+        return await this.contaModel.findOneAndDelete({numero: numero}).exec();
     }
 }
